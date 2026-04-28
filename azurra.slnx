@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="azurra.client/azurra.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="azurra.Server/azurra.Server.csproj" />
+</Solution>
