@@ -1,12 +1,28 @@
+using azurra.Server.Application;
+using azurra.Server.Application.Interfaces;
+using azurra.Server.Repository;
+using azurra.Server.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseDefaultFiles();
 app.MapStaticAssets();
