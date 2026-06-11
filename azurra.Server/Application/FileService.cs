@@ -1,26 +1,26 @@
 using azurra.Server.Application.DTO;
 using azurra.Server.Application.Interfaces;
-using azurra.Server.Domain.Models;
 using azurra.Server.Repository.Interfaces;
+using FileModel = azurra.Server.Domain.Models.File;
 
 namespace azurra.Server.Application;
 
 public class FileService(IFileRepository fileRepository) : IFileService
 {
-    public Task<IReadOnlyList<File>> GetAllAsync()
+    public Task<IReadOnlyList<FileModel>> GetAllAsync()
     {
         return fileRepository.GetAllAsync();
     }
 
-    public Task<File?> GetByIdAsync(int id)
+    public Task<FileModel?> GetByIdAsync(int id)
     {
         return fileRepository.GetByIdAsync(id);
     }
 
-    public Task<File> CreateAsync(CreateFileRequest request)
+    public Task<FileModel> CreateAsync(CreateFileRequest request)
     {
         var now = DateTime.UtcNow;
-        var file = new File
+        var file = new FileModel
         {
             Name = request.Name,
             ReferenceFile = request.ReferenceFile,
@@ -33,9 +33,9 @@ public class FileService(IFileRepository fileRepository) : IFileService
         return fileRepository.AddAsync(file);
     }
 
-    public Task<File?> UpdateAsync(int id, UpdateFileRequest request)
+    public Task<FileModel?> UpdateAsync(int id, UpdateFileRequest request)
     {
-        var file = new File
+        var file = new FileModel
         {
             Id = id,
             Name = request.Name,

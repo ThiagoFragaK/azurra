@@ -45,6 +45,7 @@ lerna-debug.log*
 .env
 .env.*
 *.local
+*.db
 
 # OS files
 .DS_Store

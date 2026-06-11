@@ -1,8 +1,8 @@
 using azurra.Server.Application;
 using azurra.Server.Application.DTO;
 using azurra.Server.Application.Interfaces;
-using azurra.Server.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using FileModel = azurra.Server.Domain.Models.File;
 
 namespace azurra.Server.Controllers;
 
@@ -11,14 +11,14 @@ namespace azurra.Server.Controllers;
 public class FileController(IFileService fileService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<File>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<FileModel>>> GetAll()
     {
         var files = await fileService.GetAllAsync();
         return Ok(files);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<File>> GetById(int id)
+    public async Task<ActionResult<FileModel>> GetById(int id)
     {
         var file = await fileService.GetByIdAsync(id);
         if (file is null)
@@ -30,14 +30,14 @@ public class FileController(IFileService fileService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<File>> Create([FromBody] CreateFileRequest request)
+    public async Task<ActionResult<FileModel>> Create([FromBody] CreateFileRequest request)
     {
         var file = await fileService.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = file.Id }, file);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<File>> Update(int id, [FromBody] UpdateFileRequest request)
+    public async Task<ActionResult<FileModel>> Update(int id, [FromBody] UpdateFileRequest request)
     {
         var file = await fileService.UpdateAsync(id, request);
         if (file is null)
