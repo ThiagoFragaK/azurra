@@ -1,25 +1,26 @@
 using azurra.Server.Application.DTO;
 using azurra.Server.Application.Interfaces;
+using azurra.Server.Domain.Models;
 using azurra.Server.Repository.Interfaces;
 
 namespace azurra.Server.Application;
 
 public class FileService(IFileRepository fileRepository) : IFileService
 {
-    public Task<IReadOnlyList<Domain.Models.File>> GetAllAsync(CancellationToken cancellationToken = default)
+    public Task<IReadOnlyList<File>> GetAllAsync()
     {
-        return fileRepository.GetAllAsync(cancellationToken);
+        return fileRepository.GetAllAsync();
     }
 
-    public Task<Domain.Models.File?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Task<File?> GetByIdAsync(int id)
     {
-        return fileRepository.GetByIdAsync(id, cancellationToken);
+        return fileRepository.GetByIdAsync(id);
     }
 
-    public Task<Domain.Models.File> CreateAsync(CreateFileRequest request, CancellationToken cancellationToken = default)
+    public Task<File> CreateAsync(CreateFileRequest request)
     {
         var now = DateTime.UtcNow;
-        var file = new Domain.Models.File
+        var file = new File
         {
             Name = request.Name,
             ReferenceFile = request.ReferenceFile,
@@ -29,12 +30,12 @@ public class FileService(IFileRepository fileRepository) : IFileService
             UpdatedAt = now
         };
 
-        return fileRepository.AddAsync(file, cancellationToken);
+        return fileRepository.AddAsync(file);
     }
 
-    public Task<Domain.Models.File?> UpdateAsync(int id, UpdateFileRequest request, CancellationToken cancellationToken = default)
+    public Task<File?> UpdateAsync(int id, UpdateFileRequest request)
     {
-        var file = new Domain.Models.File
+        var file = new File
         {
             Id = id,
             Name = request.Name,
@@ -44,11 +45,11 @@ public class FileService(IFileRepository fileRepository) : IFileService
             UpdatedAt = DateTime.UtcNow
         };
 
-        return fileRepository.UpdateAsync(file, cancellationToken);
+        return fileRepository.UpdateAsync(file);
     }
 
-    public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public Task<bool> DeleteAsync(int id)
     {
-        return fileRepository.DeleteAsync(id, cancellationToken);
+        return fileRepository.DeleteAsync(id);
     }
 }

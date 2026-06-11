@@ -1,6 +1,7 @@
 using azurra.Server.Application;
 using azurra.Server.Application.DTO;
 using azurra.Server.Application.Interfaces;
+using azurra.Server.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace azurra.Server.Controllers;
@@ -10,16 +11,16 @@ namespace azurra.Server.Controllers;
 public class FileController(IFileService fileService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Domain.Models.File>>> GetAll(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<File>>> GetAll()
     {
-        var files = await fileService.GetAllAsync(cancellationToken);
+        var files = await fileService.GetAllAsync();
         return Ok(files);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Domain.Models.File>> GetById(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<File>> GetById(int id)
     {
-        var file = await fileService.GetByIdAsync(id, cancellationToken);
+        var file = await fileService.GetByIdAsync(id);
         if (file is null)
         {
             return NotFound();
@@ -29,21 +30,16 @@ public class FileController(IFileService fileService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Domain.Models.File>> Create(
-        [FromBody] CreateFileRequest request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<File>> Create([FromBody] CreateFileRequest request)
     {
-        var file = await fileService.CreateAsync(request, cancellationToken);
+        var file = await fileService.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = file.Id }, file);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Domain.Models.File>> Update(
-        int id,
-        [FromBody] UpdateFileRequest request,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<File>> Update(int id, [FromBody] UpdateFileRequest request)
     {
-        var file = await fileService.UpdateAsync(id, request, cancellationToken);
+        var file = await fileService.UpdateAsync(id, request);
         if (file is null)
         {
             return NotFound();
@@ -53,9 +49,9 @@ public class FileController(IFileService fileService) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await fileService.DeleteAsync(id, cancellationToken);
+        var deleted = await fileService.DeleteAsync(id);
         if (!deleted)
         {
             return NotFound();
